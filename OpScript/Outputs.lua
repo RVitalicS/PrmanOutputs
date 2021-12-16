@@ -20,9 +20,10 @@ function Outputs.Define ( outputName, outputType, channelList, outputPath )
 
     if channelList == '' then return nil end
 
-
     Interface.SetAttr(string.format('renderSettings.outputs.%s.type', outputName), StringAttribute(outputType))
     Interface.SetAttr(string.format('renderSettings.outputs.%s.rendererSettings.channel', outputName), StringAttribute(channelList))
+
+    Interface.SetAttr(string.format('renderSettings.outputs.%s.rendererSettings.colorSpace', outputName), StringAttribute("ACES - ACEScg"))
 
 
     outputPath = outputPath or ''
@@ -111,6 +112,21 @@ end
 
 
 
+local function isDeep ()
+
+    local SearchGroup = Interface.GetOpArg('user')
+
+    if Channels.CheckboxMatch( SearchGroup, 'deep' ) then
+        return true
+    end
+
+    return false
+end
+
+
+
+
+
 function Outputs.PrmanEssentials()
 
 
@@ -127,6 +143,10 @@ function Outputs.PrmanEssentials()
     end
 
 
+
+    local outputType = 'raw'
+    if isDeep() then outputType = 'deep' end
+
     for outputIndex=1, #outputItems do
 
         local outputItem = outputItems[outputIndex]
@@ -137,12 +157,10 @@ function Outputs.PrmanEssentials()
 
 
         local outputName  = 'PrmanEssentials' .. tag
-        local outputType = 'raw'
-        local channelList = Channels.PrmanEssentials(tag, lpeGroup, lightGroup)
+        local channelString = Channels.PrmanEssentials(tag, lpeGroup, lightGroup)
+
         local outputPath = getPath( tag:gsub('^_+', '') )
-
-
-        Outputs.Define(outputName, outputType, channelList, outputPath)
+        Outputs.Define(outputName, outputType, channelString, outputPath)
 
     end
 

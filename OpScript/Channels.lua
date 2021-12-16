@@ -114,7 +114,7 @@ local function MakeGrouped ( channelTable, tag, lpeGroup, lightGroup )
         local channelName = channelTable[indexChannel][1]
         local channelLpe  = channelTable[indexChannel][3]
 
-        if string.find(channelLpe, 'lpe:') then 
+        if string.find(channelLpe, 'lpe:') then
 
             channelName = channelName .. tag
 
@@ -226,8 +226,14 @@ function Channels.PrmanEssentials ( tag, lpeGroup, lightGroup )
     if Channels.CheckboxMatch( SearchGroup, 'beauty' ) then
 
         local BeautyChannels = {
-        { 'Ci'                             ,   'color',     "color lpe:C.*[<L.>O]"     ,    '' },
-        { 'a'                              ,   'float',     ""                         ,    '' }}
+            { 'Ci'                             ,   'color',     ""                         ,    '' },
+            { 'a'                              ,   'float',     ""                         ,    '' }}
+
+        if Channels.CheckboxMatch( SearchGroup, 'byLPE' ) or Channels.CheckboxMatch( SearchGroup, 'byLight' ) then
+            BeautyChannels = {
+            { 'Ci'                             ,   'color',     "color lpe:C.*[<L.>O]"     ,    '' },
+            { 'a'                              ,   'float',     ""                         ,    '' }}
+        end
 
         EssentialChannels = Data.MergeTables( BeautyChannels, EssentialChannels )
     end
